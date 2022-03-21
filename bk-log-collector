@@ -15,15 +15,15 @@ usage() {
 cat << EOF
 Usage: ./collector -s <stack-name> -i <instance-id>
 Collect Buildkite Elastic CI stack logs from AWS CloudWatch
--s      Stack Name in AWS, can be found in CloudFormation
--i      Instance ID of the instance you want logs for
+-s      Auto Scaling Group Name, can be found at console.aws.amazon.com/ec2autoscaling/
+-i      Instance ID, the AWS instance ID for the instance you want to collect logs for
 EOF
 }
 
 while getopts 'hs:i:' opt; do
     case ${opt} in
         s ) #Make use of stack Name
-            stackName=$OPTARG
+            scalingGroup=$OPTARG
             ;;
         i )
             instanceId=$OPTARG
@@ -45,7 +45,7 @@ shift $((OPTIND -1))
 
 now=$(date +"%F")
 
-echo "Collecting logs for stack $stackName and instance $instanceId"
+echo "Collecting logs for instance $instanceId"
 
 # grab the logs for the instance
 aws logs get-log-events --log-group-name /buildkite/buildkite-agent --log-stream-name $instanceId >> /tmp/buildkite-agent-$instanceId.log
@@ -54,6 +54,12 @@ aws logs get-log-events --log-group-name /buildkite/lifecycled --log-stream-name
 aws logs get-log-events --log-group-name /buildkite/docker-daemon --log-stream-name $instanceId >> /tmp/docker-daemon-$instanceId.log
 
 # TODO: Get Lambda logs
+
+
+# ASG activity for the scaling group
+echo "Collecting ASG activity for $scalingGroup"
+
+aws autoscaling describe-scaling-activities --auto-scaling-group-name $scalingGroup >> /tmp/asg-activities-$scalingGroup.log
 
 
 # make an archive with the logs
