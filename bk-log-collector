@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# This script leverages the AWS CLI to collect Elastic Stack logs for your
+# Buildkite Elastic CI Stack instances
+#
+# It assumes you have aws credentials configured so it is recommended to
+# use something like aws-vault[https://github.com/99designs/aws-vault].
+#
+# You will need to know the Instance ID and Stack name of the resources
+# you want to collect logs for.
+
+set -euo pipefail
+
+usage() {
+cat << EOF
+Usage: ./collector -s <stack-name> -i <instance-id>
+Collect Buildkite Elastic CI stack logs from AWS CloudWatch
+-s      Stack Name in AWS, can be found in CloudFormation
+-i      Instance ID of the instance you want logs for
+EOF
+}
+
+while getopts 'hs:i:' opt; do
+    case ${opt} in
+        s ) #Make use of stack Name
+            stackName=$OPTARG
+            ;;
+        i )
+            instanceId=$OPTARG
+            ;;
+        h )
+            usage
+            exit 0
+            ;;
+        \? )
+            echo "Invalid Option: -$OPTARG" 1>&2
+            exit 1
+            ;;
+        : )
+            echo "Invalid option: $OPTARG requires an arguemnt" 1>&2
+            ;;
+    esac
+done
+shift $((OPTIND -1))
+
+now=$(date +"%F")
+
+echo "Collecting logs for stack $stackName and instance $instanceId"
+
+# grab the logs for the instance
+aws logs get-log-events --log-group-name /buildkite/buildkite-agent --log-stream-name $instanceId >> /tmp/buildkite-agent-$instanceId.log
+aws logs get-log-events --log-group-name /buildkite/system --log-stream-name $instanceId >> /tmp/system-$instanceId.log
+aws logs get-log-events --log-group-name /buildkite/lifecycled --log-stream-name $instanceId >> /tmp/lifecycled-$instanceId.log
+aws logs get-log-events --log-group-name /buildkite/docker-daemon --log-stream-name $instanceId >> /tmp/docker-daemon-$instanceId.log
+
+# TODO: Get Lambda logs
+
+
+# make an archive with the logs
+zip /tmp/buildkite-logs-$now.zip /tmp/*.log
+
+# clean up the unneeded files
+rm /tmp/*.log
+
+echo "Finished collecting logs, you can find them here: /tmp/buildkite-logs-$now.zip"
+
+exit 0
