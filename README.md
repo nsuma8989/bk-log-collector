@@ -1,9 +1,8 @@
 # Buildkite Elastic CI Stack Log Collector
----
-A bash script intended to make it easier to collect logs for troubleshooting Buildkite agents running on the Buildkite Elastic CI Stack. If you need assistance from Buildkite support, please run this script and send the logs to support@buildkite.com.
+A bash script intended to make it easier to collect logs for troubleshooting Buildkite agents running on the [Buildkite Elastic CI Stack](https://github.com/buildkite/elastic-ci-stack-for-aws). If you need assistance from Buildkite support, please run this script and send the logs to support@buildkite.com.
 
 ## Setup
----
+
 Clone the repo:
 
 ```bash
@@ -16,7 +15,7 @@ It is recommended you use a tool like [aws-vault](https://github.com/99designs/a
 
 
 ## Usage
----
+
 Currently, the script requires and Autoscaling Group Name and an instance ID:
 
 ```bash
