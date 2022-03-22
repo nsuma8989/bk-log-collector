@@ -48,10 +48,10 @@ now=$(date +"%F")
 echo "Collecting logs for instance $instanceId"
 
 # grab the logs for the instance
-aws logs get-log-events --log-group-name /buildkite/buildkite-agent --log-stream-name $instanceId >> /tmp/buildkite-agent-$instanceId.log
-aws logs get-log-events --log-group-name /buildkite/system --log-stream-name $instanceId >> /tmp/system-$instanceId.log
-aws logs get-log-events --log-group-name /buildkite/lifecycled --log-stream-name $instanceId >> /tmp/lifecycled-$instanceId.log
-aws logs get-log-events --log-group-name /buildkite/docker-daemon --log-stream-name $instanceId >> /tmp/docker-daemon-$instanceId.log
+aws logs get-log-events --log-group-name /buildkite/buildkite-agent --log-stream-name $instanceId --output text >> /tmp/buildkite-agent-$instanceId.log
+aws logs get-log-events --log-group-name /buildkite/system --log-stream-name $instanceId --output text >> /tmp/system-$instanceId.log
+aws logs get-log-events --log-group-name /buildkite/lifecycled --log-stream-name $instanceId --output text >> /tmp/lifecycled-$instanceId.log
+aws logs get-log-events --log-group-name /buildkite/docker-daemon --log-stream-name $instanceId --output text >> /tmp/docker-daemon-$instanceId.log
 
 # TODO: Get Lambda logs
 
