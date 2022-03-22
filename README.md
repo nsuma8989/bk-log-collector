@@ -6,7 +6,7 @@ A bash script intended to make it easier to collect logs for troubleshooting Bui
 Clone the repo:
 
 ```bash
-git clone github.com/jeremybumsted/bk-log-collector
+git clone https://github.com/nsuma8989/bk-log-collector.git
 ```
 
 Ensure you have the configured the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
@@ -16,10 +16,16 @@ It is recommended you use a tool like [aws-vault](https://github.com/99designs/a
 
 ## Usage
 
-Currently, the script requires and Autoscaling Group Name and an instance ID:
+Currently, the script requires an Autoscaling Group Name and an instance ID:
 
 ```bash
 ./bk-log-collector -s <ASG-Group-Name> -i <Instance-ID>
+```
+
+For more details on the input parameters:
+
+```bash
+./bk-log-collector -h
 ```
 
 This will collect logs from the following locations in CloudWatch and store them in a zip file in `/tmp/buildkite-logs-[date].zip`:
