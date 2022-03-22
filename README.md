@@ -6,7 +6,7 @@ A bash script intended to make it easier to collect logs for troubleshooting Bui
 Clone the repo:
 
 ```bash
-git clone https://github.com/nsuma8989/bk-log-collector.git
+git clone https://github.com/jeremybumsted/bk-log-collector.git
 ```
 
 Ensure you have the configured the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
